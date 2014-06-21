@@ -1,11 +1,16 @@
 from flask import Blueprint, render_template, abort
-from jinja2 import TemplateNotFound
+
+from peewee import SqliteDatabase
+
+from dbModels import Post
 
 blog = Blueprint("blog", __name__, template_folder="templates", static_folder="static")
 
+
 @blog.route("/")
 def index():
-    return render_template("index.html")
+    posts = Post.select()
+    return render_template("index.html",posts = posts)
 
 
 @blog.route("/post/<postNumber>")
