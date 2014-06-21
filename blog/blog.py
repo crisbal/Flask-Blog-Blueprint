@@ -5,4 +5,9 @@ blog = Blueprint("blog", __name__, template_folder="templates", static_folder="s
 
 @blog.route("/")
 def index():
-    return "Hello from the blog template!"
+    return render_template("index.html")
+
+
+@blog.route("/post/<postNumber>")
+def viewPost(postNumber):
+    return "You are viewing post number " + postNumber
