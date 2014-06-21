@@ -9,10 +9,11 @@ blog = Blueprint("blog", __name__, template_folder="templates", static_folder="s
 
 @blog.route("/")
 def index():
-    posts = Post.select()
-    return render_template("index.html",posts = posts)
+    posts = Post.select().order_by(Post.time.desc())
+    return render_template("posts.html",posts = posts)
 
 
 @blog.route("/post/<postNumber>")
 def viewPost(postNumber):
-    return "You are viewing post number " + postNumber
+    post = Post.get(Post.id == postNumber)
+    return render_template("post.html",post = post)

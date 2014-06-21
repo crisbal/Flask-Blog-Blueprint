@@ -10,13 +10,13 @@
             <a class="postTitleLink" href="{{ url_for('.viewPost', postNumber = post.id) }}">{{ post.title }}</a>
         </span> 
         <br>
-        <span class="postTime">{{ post.time }}</span>
+        <span class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</span>
         <br>
-        <span>{{ post.shortDescription}}</span>
+        <span class="postShortDescription">{{ post.shortDescription }}</span>
     </div>
     <br>
 {% else %}
-    <div class="noPostFound">No post found</div>
+    <div class="postPreview notFound">No post found</div>
 {% endfor %}
 
 {% endblock %}
