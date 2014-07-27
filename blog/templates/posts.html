@@ -13,6 +13,8 @@
         <span class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</span>
         <br>
         <span class="postShortDescription">{{ post.shortDescription }}</span>
+        <br>
+        <span class="postShortDescription">{{ post.post|truncate(200) }}</span>
     </div>
     <br>
 {% else %}
