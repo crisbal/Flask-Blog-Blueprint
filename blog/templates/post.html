@@ -6,15 +6,12 @@
     
 {% block content %}
     <div class="post">
-        <span class="postTitle">
+        <div class="postTitle">
             <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">{{ post.title }}</a>
-        </span> 
-        <br>
-        <span class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</span>
-        <br>
-        <span class="postShortDescription">{{ post.shortDescription }}</span>
-        <br>
-        <span class="postBody">{{ post.body|markdown }}</span>
+        </div> 
+        <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
+        <div class="postShortDescription">{{ post.shortDescription }}</div>
+        <div class="postBody">{{ post.body|markdown }}</div>
     </div>
 {% endblock %}
 

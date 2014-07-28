@@ -1,0 +1,47 @@
+body,html{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #BEB9B9;
+    padding: 1em;
+}
+
+.postPreview{
+    border: 1px solid black;
+    padding: 1em;
+}
+
+.postTitle{
+    margin-bottom: 1em;
+}
+
+
+.postTitleLink, .postTitleLink:link, .postTitleLink:visited
+{
+    font-size: 1.3em;
+    color: green;
+    text-decoration:underline;
+}
+
+
+.postTime{
+    font-size: 0.8em;
+    text-align: right;
+}
+
+.postShortDescription{
+    font-size: 1.1em;
+    font-style: italic;
+    margin-bottom: 1em;
+}
+
+
+.postBodyShort{
+    margin-bottom: 1em;
+}
+.readMoreButton{
+    text-align: right;
+}
+

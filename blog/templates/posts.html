@@ -6,15 +6,22 @@
 
 {% for post in posts %}
     <div class="postPreview">
-        <span class="postTitle">
-            <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">{{ post.title }}</a>
-        </span> 
-        <br>
-        <span class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</span>
-        <br>
-        <span class="postShortDescription">{{ post.shortDescription }}</span>
-        <br>
-        <span class="postBody">{{ post.body|truncate(200) }}</span>
+        <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">
+            <div class="postTitle">
+                {{ post.title }}
+            </div> 
+        </a>
+        <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
+
+        <div class="postShortDescription">{{ post.shortDescription }}</div>
+
+        <div class="postBodyShort">{{ post.body|truncate(200) }}</div>
+        
+        <div class="readMoreButton">
+            <a href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">
+                Read More
+            </a>
+        </div>
     </div>
     <br>
 {% else %}
