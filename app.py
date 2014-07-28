@@ -3,7 +3,10 @@ from flask import Flask
 from blog import blog
 
 app = Flask(__name__)
+
+blog.init(app)
 app.register_blueprint(blog.blog, url_prefix='/blog')
+
 
 @app.route('/')
 def index():

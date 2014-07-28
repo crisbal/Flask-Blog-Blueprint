@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}My Blog{% endblock %}
+{% block title %}All posts{% endblock %}
 
 
 {% block content %}
@@ -7,14 +7,14 @@
 {% for post in posts %}
     <div class="postPreview">
         <span class="postTitle">
-            <a class="postTitleLink" href="{{ url_for('.viewPost', postNumber = post.id) }}">{{ post.title }}</a>
+            <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">{{ post.title }}</a>
         </span> 
         <br>
         <span class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</span>
         <br>
         <span class="postShortDescription">{{ post.shortDescription }}</span>
         <br>
-        <span class="postShortDescription">{{ post.post|truncate(200) }}</span>
+        <span class="postBody">{{ post.body|truncate(200) }}</span>
     </div>
     <br>
 {% else %}
