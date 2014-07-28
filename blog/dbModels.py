@@ -12,18 +12,21 @@ class BaseModel(Model):
         database = db
 
 class Post(BaseModel):
-    title = TextField()
+    title = CharField(max_length=128)
     shortDescription = TextField()
     body = TextField()
     time = DateTimeField(default=datetime.now)
-    url = CharField()
+    url = CharField(max_length=128)
 
     @staticmethod
     def createUrl(string):
-        return re.sub("[^\w\s]", "", string).strip().replace(" ","_").lower()
+        string = re.sub("[^\w\s]", "", string).strip()
+        string = string[:64].strip()
+        string = string.replace(" ","_").lower()
+        return string
 
 class Tag(BaseModel):
-    tag = CharField()
+    tag = CharField(max_length=64)
 
 class Tags(BaseModel):
     tag = ForeignKeyField(Tag)

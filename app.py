@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for
 
 from blog import blog
 
@@ -10,7 +10,7 @@ app.register_blueprint(blog.blog, url_prefix='/blog')
 
 @app.route('/')
 def index():
-    return 'This is the main app for a blog blueprint'
+    return "<a href=" + url_for('blog.index') +  ">Blog</a> "
 
 if __name__ == '__main__':
     app.debug = True
