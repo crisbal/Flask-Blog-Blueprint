@@ -27,6 +27,12 @@ def viewPost(postId,postUrl):
     """if len(postUrl) > 0:
         post = Post.get(Post.id == postId,Post.url == postUrl)
     else:"""
-    
+
     post = Post.get(Post.id == postId)
     return render_template("post.html",post = post)
+
+
+@blog.route("/admin")
+def admin():
+    posts = Post.select().order_by(Post.time.desc())
+    return render_template("admin.html",posts = posts)

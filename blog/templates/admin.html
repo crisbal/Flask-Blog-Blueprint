@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('.static', filename='admin.css') }}" />
+{% endblock %}
+
+{% block title %}Admin Panel{% endblock %}
+
+
+{% block content %}
+
+<h1>Admin panel</h1>
+<p>Here you can manage your blog:
+<ul>
+    <li>Add, Update and Delete Posts</li>
+    <li>Delete Comments</li>
+</ul> 
+
+<h2>Posts</h2>
+<table class="adminPostsTable">
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    {% for post in posts %}
+        <tr>
+            <td>{{ post.id }}</td>
+            <td>{{ post.title }}</td>
+            <td>{{ post.time.strftime('%d %b, %H:%M') }}</td>
+            <td><div class="adminEditButton">E</div></td>
+            <td><div class="adminDeleteButton">X</div></td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colpsan="5">No post found</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
