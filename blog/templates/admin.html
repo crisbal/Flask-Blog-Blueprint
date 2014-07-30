@@ -33,7 +33,7 @@
     {% for post in posts %}
         <tr>
             <td>{{ post.id }}</td>
-            <td>{{ post.title }}</td>
+            <td><a href="{{url_for('blog.viewPost', postId = post.id, postUrl = post.url)}}" >{{ post.title }}</a></td>
             <td>{{ post.time.strftime('%d %b, %H:%M') }}</td>
             <td><div class="adminEditButton" post-id="{{ post.id }}" >E</div></td>
             <td><div class="adminDeleteButton" post-id="{{ post.id }}" >X</div></td>
