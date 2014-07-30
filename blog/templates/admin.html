@@ -5,7 +5,7 @@
     
     <script>
         baseAdminUrl = "{{ url_for('blog.admin') }}"
-        baseAdminDeleteUrl = "{{ url_for('blog.adminDeletePost', postId = 0) }}".slice(0, -1);  //remove the 0 required by Flask since the function must have a postId parameter
+        baseAdminDeleteUrl = "{{ url_for('blog.adminDeletePost', postId = -1) }}"
     </script>
 {% endblock %}
 
@@ -22,6 +22,11 @@
 </ul> 
 
 <h2>Posts</h2>
+
+<a href="{{url_for('blog.adminAddPost')}}" class="adminAddPostLink"><div class="adminAddPost">Add a post</div></a>
+<br><br>
+
+<div class="adminPostTableTitle">All posts</div>
 <table class="adminPostsTable">
     <tr>
         <th>Id</th>
@@ -46,4 +51,5 @@
 </table>
 
 <script src="{{ url_for('.static', filename='js/admin.js') }}"></script>
+
 {% endblock %}

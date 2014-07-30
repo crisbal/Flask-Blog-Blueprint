@@ -48,3 +48,16 @@ body{
     text-align: right;
 }
 
+.linkShowNewer{
+    float: left;
+}
+
+.linkShowOlder{
+    float: right;
+}
+
+.otherPages:after {
+    display: block;
+    content: '';
+    clear: both; 
+}

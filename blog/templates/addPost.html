@@ -3,10 +3,10 @@
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/editor.css') }}" />
-
+    
     <script>
-        baseAdminUrl = "{{ url_for('blog.admin') }}"
-        baseAdminAddUrl = "{{ url_for('blog.adminAddPost')}}"  //remove the 0 required by Flask since the function must have a postId parameter
+        baseAdminAddUrl = "{{ url_for('blog.adminAddPost')}}" 
+        baseAdminPreviewUrl = "{{ url_for('blog.adminAddPost')}}" 
     </script>
 {% endblock %}
 
@@ -16,19 +16,23 @@
 {% endblock %}
     
 {% block content %}
-    <h1 class="addPostTitle">Add a post</h1>
-    <span class="addPostSubtitle">Please fill in all the required fields.</span>
-    <div class="postEditor">
-        <form method="POST" action="{{ url_for('blog.adminAddPost') }}">
-            <input type="text" name="title" class="postEditorTitle" placeholder="Title" autocomplete="off" required>
-            <br>
-            <input type="text" name="shortDescription" class="postEditorDesc" placeholder="Short Description of the post" autocomplete="off" required>
-            <br>
-            <textarea name="body" class="postEditorBody" rows="25" required>Post Content, you can use markdown</textarea>
-            <br>
-            <input type="submit" class="postEditorPreview" id="previewPost" value="Preview Post">
-            <input type="submit" class="postEditorApply" id="sumbitPost" value="Add Post">
-        </form>
-    </div>
+
+<h1 class="addPostTitle">Add a post</h1>
+<span class="addPostSubtitle">Please fill in all the required fields.</span>
+<div class="postEditor">
+    <form id="form" onsubmit="return false;">
+        <input type="text" name="title" id="title" class="postEditorTitle" placeholder="Title" autocomplete="off" required>
+        <br>
+        <input type="text" name="shortDescription" id="shortDescription" class="postEditorDesc" placeholder="Short Description of the post" autocomplete="off" required>
+        <br>
+        <textarea name="body" id="body" class="postEditorBody" rows="25" required>Post Content, you can use markdown, HTML will be escaped.</textarea>
+        <br>
+        <input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url Text" autocomplete="off">
+        <br>
+        <input type="submit" class="postEditorApply" id="editorAddPost" value="Add Post">
+    </form>
+</div>
+<script src="{{ url_for('.static', filename='js/editor.js') }}"></script>
+
 {% endblock %}
 

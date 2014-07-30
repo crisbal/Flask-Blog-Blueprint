@@ -2,7 +2,7 @@ $( ".adminDeleteButton" ).click(function() {
     postId = $(this).attr("post-id");
 
     $.ajax({
-        url: baseAdminDeleteUrl + postId,
+        url: baseAdminDeleteUrl.replace("-1",postId),
         type: 'DELETE',
         success: function(result) {
             if (result.status == "OK"){

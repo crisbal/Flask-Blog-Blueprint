@@ -29,4 +29,15 @@
     <div class="postPreview notFound">No post found</div>
 {% endfor %}
 
+    <div class="otherPages">
+        {% if page %}
+            {% if showPrev %}
+                <a class="linkShowNewer" href="{{url_for('blog.showPage',page= page-1)}}">Newer</a>
+            {% endif %}
+
+            {% if showNext %}
+                <a class="linkShowOlder" href="{{url_for('blog.showPage',page= page+1)}}">Older</a>
+            {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}
