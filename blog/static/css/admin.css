@@ -1,0 +1,22 @@
+.adminPostsTable{
+    width: 100%;
+}
+.adminPostsTable th{
+    border: 1px solid black;
+}
+
+.adminPostsTable td{
+    padding: 0.5    em;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.adminDeleteButton{
+    color: red;
+    cursor: pointer;
+}
+
+.adminEditButton{
+    color: blue;
+    cursor: pointer;
+}

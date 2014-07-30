@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, current_app
+from flask import Blueprint, render_template, abort, current_app, request, redirect, url_for, jsonify
 
 from peewee import SqliteDatabase
 
@@ -32,7 +32,20 @@ def viewPost(postId,postUrl):
     return render_template("post.html",post = post)
 
 
+
 @blog.route("/admin")
 def admin():
     posts = Post.select().order_by(Post.time.desc())
     return render_template("admin.html",posts = posts)
+
+@blog.route("/admin/delete/<int:postId>", methods=["GET", "DELETE"])
+def adminDeletePost(postId):
+    if request.method == "DELETE":
+        try:
+            post = Post.get(Post.id == postId)
+            post.delete_instance()
+            return jsonify(status = "OK",postRemoved = postId)
+        except:
+            return jsonify(status = "ERROR", error = "Can't find post with ID " + str(postId))
+    else:
+        return redirect(url_for('blog.admin'))

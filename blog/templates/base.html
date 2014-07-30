@@ -2,7 +2,8 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %} - My Blog</title>
-        <link rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('.static', filename='css/base.css') }}" />
+        <script src="{{ url_for('.static', filename='js/jquery.js') }}"></script>
         {% block head %}
         
         

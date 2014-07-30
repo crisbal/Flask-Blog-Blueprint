@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('.static', filename='admin.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/admin.css') }}" />
+    
+    <script>
+        baseAdminUrl = "{{ url_for('blog.admin') }}"
+        baseAdminDeleteUrl = "{{ url_for('blog.adminDeletePost', postId = 0) }}".slice(0, -1);  //remove the 0 required by Flask since the function must have a postId parameter
+    </script>
 {% endblock %}
 
 {% block title %}Admin Panel{% endblock %}
@@ -30,14 +35,15 @@
             <td>{{ post.id }}</td>
             <td>{{ post.title }}</td>
             <td>{{ post.time.strftime('%d %b, %H:%M') }}</td>
-            <td><div class="adminEditButton">E</div></td>
-            <td><div class="adminDeleteButton">X</div></td>
+            <td><div class="adminEditButton" post-id="{{ post.id }}" >E</div></td>
+            <td><div class="adminDeleteButton" post-id="{{ post.id }}" >X</div></td>
         </tr>
     {% else %}
-        <tr>
-            <td colpsan="5">No post found</td>
+        <tr >
+            <td colspan="5">No post found</td>
         </tr>
     {% endfor %}
 </table>
 
+<script src="{{ url_for('.static', filename='js/admin.js') }}"></script>
 {% endblock %}
