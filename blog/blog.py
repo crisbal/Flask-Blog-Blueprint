@@ -46,6 +46,6 @@ def adminDeletePost(postId):
             post.delete_instance()
             return jsonify(status = "OK",postRemoved = postId)
         except:
-            return jsonify(status = "ERROR", error = "Can't find post with ID " + str(postId))
+            return jsonify(status = "ERROR", error = "Can't find post with Id " + str(postId))
     else:
         return redirect(url_for('blog.admin'))

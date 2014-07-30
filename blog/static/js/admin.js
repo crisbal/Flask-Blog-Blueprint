@@ -1,7 +1,6 @@
 $( ".adminDeleteButton" ).click(function() {
     postId = $(this).attr("post-id");
 
-    alert(baseAdminDeleteUrl + postId);
     $.ajax({
         url: baseAdminDeleteUrl + postId,
         type: 'DELETE',
