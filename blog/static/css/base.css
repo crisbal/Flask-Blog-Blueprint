@@ -8,6 +8,9 @@ body{
     padding: 1em;
 }
 
+*{
+    box-sizing: border-box;
+}
 .postPreview{
     border: 1px solid black;
     padding: 1em;

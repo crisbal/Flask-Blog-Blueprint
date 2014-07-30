@@ -10,8 +10,18 @@ blog = Blueprint("blog", __name__, template_folder="templates", static_folder="s
 
 
 def init(app):
-    md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True)
+    md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True,escape=True)
     md.init_app(app)
+
+
+
+######                       
+#     # #       ####   ####  
+#     # #      #    # #    # 
+######  #      #    # #      
+#     # #      #    # #  ### 
+#     # #      #    # #    # 
+######  ######  ####   ####  
 
 @blog.route("/")
 def index():
@@ -33,10 +43,31 @@ def viewPost(postId,postUrl):
 
 
 
+   #                           
+  # #   #####  #    # # #    # 
+ #   #  #    # ##  ## # ##   # 
+#     # #    # # ## # # # #  # 
+####### #    # #    # # #  # # 
+#     # #    # #    # # #   ## 
+#     # #####  #    # # #    # 
+
 @blog.route("/admin")
 def admin():
     posts = Post.select().order_by(Post.time.desc())
     return render_template("admin.html",posts = posts)
+
+@blog.route("/admin/add", methods=["GET", "POST"])
+def adminAddPost():
+    if request.method == "GET":
+        return render_template("addPost.html")
+    else:
+       post = Post()
+       post.title = request.form["title"]
+       post.shortDescription = request.form["shortDescription"]
+       post.body = request.form["body"]
+       post.url = post.createUrl(post.title)
+       post.save()
+       return redirect(url_for('blog.viewPost', postId = post.id, postUrl = post.url))
 
 @blog.route("/admin/delete/<int:postId>", methods=["GET", "DELETE"])
 def adminDeletePost(postId):
@@ -49,3 +80,5 @@ def adminDeletePost(postId):
             return jsonify(status = "ERROR", error = "Can't find post with Id " + str(postId))
     else:
         return redirect(url_for('blog.admin'))
+
+

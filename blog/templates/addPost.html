@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/editor.css') }}" />
+
+    <script>
+        baseAdminUrl = "{{ url_for('blog.admin') }}"
+        baseAdminAddUrl = "{{ url_for('blog.adminAddPost')}}"  //remove the 0 required by Flask since the function must have a postId parameter
+    </script>
+{% endblock %}
+
+
+{% block title %}
+    Add a post
+{% endblock %}
+    
+{% block content %}
+    <h1 class="addPostTitle">Add a post</h1>
+    <span class="addPostSubtitle">Please fill in all the required fields.</span>
+    <div class="postEditor">
+        <form method="POST" action="{{ url_for('blog.adminAddPost') }}">
+            <input type="text" name="title" class="postEditorTitle" placeholder="Title" autocomplete="off" required>
+            <br>
+            <input type="text" name="shortDescription" class="postEditorDesc" placeholder="Short Description of the post" autocomplete="off" required>
+            <br>
+            <textarea name="body" class="postEditorBody" rows="25" required>Post Content, you can use markdown</textarea>
+            <br>
+            <input type="submit" class="postEditorPreview" id="previewPost" value="Preview Post">
+            <input type="submit" class="postEditorApply" id="sumbitPost" value="Add Post">
+        </form>
+    </div>
+{% endblock %}
+

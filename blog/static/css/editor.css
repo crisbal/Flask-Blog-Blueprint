@@ -1,0 +1,15 @@
+*:required{
+    border: 1px solid red;
+}
+
+*:required:focus{
+    border: 1px solid black;
+}
+
+.postEditorDesc{
+    width: 100%;
+}
+
+.postEditorBody{
+    width: 100%;
+}
