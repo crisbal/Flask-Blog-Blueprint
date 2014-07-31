@@ -6,7 +6,9 @@ from dbModels import Post
 
 from flask.ext.misaka import Misaka
 
-blog = Blueprint("blog", __name__, template_folder="templates", static_folder="static")
+import Routes, Config
+
+blog = Blueprint("blog", __name__, template_folder=Config.template_folder, static_folder=Config.static_folder)
 
 
 def init(app):
@@ -23,39 +25,40 @@ def init(app):
 #     # #      #    # #    # 
 ######  ######  ####   ####  
 
-@blog.route("/")
+@blog.route(Routes.index)
 def index():
-  return showPage(1)
+  return show_page(1)
 
 
 
-@blog.route("/<int:page>/")
-def showPage(page):
+@blog.route(Routes.show_page)
+def show_page(page):
   if(page<=0):
     return 404
 
   posts = Post.select()
-  renderPosts = posts.order_by(Post.time.desc()).paginate(page, 10)
+  render_posts = posts.order_by(Post.time.desc()).paginate(page, 10)
   if posts.count() > 10*page:
     if page == 1:
-      return render_template("posts.html",posts = renderPosts, page = page, showPrev = False, showNext = True)
+      return render_template("posts.html",posts = render_posts, page = page, show_prev = False, show_next = True)
     else:
-      return render_template("posts.html",posts = renderPosts, page = page, showPrev = True, showNext = True)
+      return render_template("posts.html",posts = render_posts, page = page, show_prev = True, show_next = True)
   else:
     if page == 1:
-      return render_template("posts.html",posts = renderPosts, page = page, showPrev = False, showNext = False)
+      return render_template("posts.html",posts = render_posts, page = page, show_prev = False, show_next = False)
     else:
-      return render_template("posts.html",posts = renderPosts, page = page, showPrev = True, showNext = False)
+      return render_template("posts.html",posts = render_posts, page = page, show_prev = True, show_next = False)
 
 
 
-@blog.route("/read/<int:postId>/")
-def viewPostOnlyId(postId):
-    return viewPost(postId,"")
+@blog.route(Routes.view_post_only_id)
+def view_post_only_id(post_id):
+    return view_post(post_id,"")
 
-@blog.route("/read/<int:postId>/<postUrl>/")
-def viewPost(postId,postUrl):
-  post = Post.get(Post.id == postId)
+
+@blog.route(Routes.view_post)
+def view_post(post_id,post_url):
+  post = Post.get(Post.id == post_id)
   return render_template("post.html",post = post)
 
 
@@ -69,78 +72,78 @@ def viewPost(postId,postUrl):
 #     # #####  #    # # #    # 
 
 
-def validatePostForm():
+def validate_post_form():
   post = Post()
 
   post.isError = True
-  if validateFormField(request.form,"title"):
-    post.title = cleanString(request.form["title"])
+  if validate_form_field(request.form,"title"):
+    post.title = clean_string(request.form["title"])
   else:
-    post.error = raiseError ("Title is required.")
+    post.error = generate_error("Title is required.")
     return post
   
-  if validateFormField(request.form,"shortDescription"):
-    post.shortDescription = cleanString(request.form["shortDescription"])
+  if validate_form_field(request.form,"shortDescription"):
+    post.short_description = clean_string(request.form["shortDescription"])
   else:
-    post.error = raiseError ("Description is required.")
+    post.error = generate_error("Description is required.")
     return post
 
-  if validateFormField(request.form,"body"):
-    post.body = cleanString(request.form["body"])
+  if validate_form_field(request.form,"body"):
+    post.body = clean_string(request.form["body"])
   else:
-    post.error = raiseError ("Body is required.")
+    post.error = generate_error("Body is required.")
     return post
 
   print(len(request.form["customUrl"]))
-  if len(cleanString(request.form["customUrl"]))>0:
-    post.url = post.createUrl(cleanString(request.form["customUrl"]))
+  if len(clean_string(request.form["customUrl"]))>0:
+    post.url = post.create_url(clean_string(request.form["customUrl"]))
   else:
-    post.url = post.createUrl(post.title)
+    post.url = post.create_url(post.title)
 
   post.isError = False
   return post
 
 
-def validateFormField(form,field):
+def validate_form_field(form,field):
   return True if len(form[field].strip()) > 0 else False
 
-def cleanString(string):
+def clean_string(string):
   return string.strip()
 
-def raiseError(error):
+def generate_error(error):
   return jsonify(status = "ERROR", error = error)
 
 
-@blog.route("/admin/")
+@blog.route(Routes.admin_panel)
 def admin():
     posts = Post.select().order_by(Post.time.desc())
     return render_template("admin.html",posts = posts)
 
-@blog.route("/admin/add/", methods=["GET", "POST"])
-def adminAddPost():
+@blog.route(Routes.admin_add_post, methods=["GET", "POST"])
+def admin_add_post():
   if request.method == "GET":
       return render_template("addPost.html")
   else:
     try:
-      post = validatePostForm()
-      if not post.isError:
+      post = validate_post_form()
+      if not post.isError:  
         
         post.save()
-        return jsonify(status = "OK", url = url_for("blog.viewPost",postId = post.id, postUrl=post.url))
+        return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
       else:
         return post.error
     except Exception as e:
-      return raiseError(str(e))
+      return generate_error(str(e))
 
-@blog.route("/admin/delete/<int:postId>/", methods=["GET", "DELETE"])
-def adminDeletePost(postId):
+@blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
+def admin_delete_post(post_id):
     if request.method == "DELETE":
         try:
-            post = Post.get(Post.id == postId)
+            post = Post.get(Post.id == post_id)
             post.delete_instance()
-            return jsonify(status = "OK",postRemoved = postId)
+            return jsonify(status = "OK",postRemoved = post_id)
         except:
-            return raiseError("Can't find post with Id " + str(postId))
+            return generate_error("Can't find post with Id " + str(post_id))
     else:
         return redirect(url_for('blog.admin'))
 

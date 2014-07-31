@@ -7,19 +7,19 @@
 
 {% for post in posts %}
     <div class="postPreview">
-        <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">
+        <a class="postTitleLink" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">
             <div class="postTitle">
                 {{ post.title }}
             </div> 
         </a>
         <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
 
-        <div class="postShortDescription">{{ post.shortDescription }}</div>
+        <div class="postShortDescription">{{ post.short_description }}</div>
 
         <div class="postBodyShort">{{ post.body|truncate(200) }}</div>
         
         <div class="readMoreButton">
-            <a href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">
+            <a href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">
                 Read More
             </a>
         </div>
@@ -31,12 +31,12 @@
 
     <div class="otherPages">
         {% if page %}
-            {% if showPrev %}
-                <a class="linkShowNewer" href="{{url_for('blog.showPage',page= page-1)}}">Newer</a>
+            {% if show_prev %}
+                <a class="linkShowNewer" href="{{url_for('blog.show_page',page= page-1)}}">Newer</a>
             {% endif %}
 
-            {% if showNext %}
-                <a class="linkShowOlder" href="{{url_for('blog.showPage',page= page+1)}}">Older</a>
+            {% if show_next %}
+                <a class="linkShowOlder" href="{{url_for('blog.show_page',page= page+1)}}">Older</a>
             {% endif %}
         {% endif %}
     </div>

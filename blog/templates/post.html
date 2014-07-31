@@ -7,10 +7,10 @@
 {% block content %}
     <div class="post">
         <div class="postTitle">
-            <a class="postTitleLink" href="{{ url_for('.viewPost', postId = post.id, postUrl = post.url) }}">{{ post.title }}</a>
+            <a class="postTitleLink" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">{{ post.title }}</a>
         </div> 
         <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
-        <div class="postShortDescription">{{ post.shortDescription }}</div>
+        <div class="postShortDescription">{{ post.short_description }}</div>
         <div class="postBody">{{ post.body|markdown }}</div>
     </div>
 {% endblock %}

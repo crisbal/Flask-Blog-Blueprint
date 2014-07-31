@@ -13,13 +13,13 @@ class BaseModel(Model):
 
 class Post(BaseModel):
     title = CharField(max_length=128)
-    shortDescription = TextField()
+    short_description = TextField()
     body = TextField()
     time = DateTimeField(default=datetime.now)
     url = CharField(max_length=128)
 
     @staticmethod
-    def createUrl(string):
+    def create_url(string):
         string = re.sub("[^\w\s]", "", string).strip()
         string = string[:64].strip()
         string = string.replace(" ","_").lower()
@@ -36,6 +36,6 @@ class Comment(BaseModel):
     username = CharField(64)
     email = CharField()
     body = CharField(2048)
-    replyTo = ForeignKeyField('self',null=True)
+    reply_to = ForeignKeyField('self',null=True)
 
 
