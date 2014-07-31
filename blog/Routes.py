@@ -13,4 +13,5 @@ view_post = "/view/<int:post_id>/<post_url>/"  #<int:post_id> & <post_url> are r
 
 admin_panel = "/admin/"
 admin_add_post = "/admin/add/"
+admin_edit_post = "/admin/edit/<int:post_id>"
 admin_delete_post = "/admin/delete/<int:post_id>/" #<int:post_id> required in the url

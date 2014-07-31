@@ -5,3 +5,6 @@ base_url = "/blog" #the base url for the blog
 template_folder = "templates"
 
 static_folder = "static"
+
+
+post_per_page = 5

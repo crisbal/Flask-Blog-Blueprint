@@ -34,11 +34,11 @@ def index():
 @blog.route(Routes.show_page)
 def show_page(page):
   if(page<=0):
-    return 404
+    return "404", 404
 
-  posts = Post.select()
-  render_posts = posts.order_by(Post.time.desc()).paginate(page, 10)
-  if posts.count() > 10*page:
+  posts = Post.select().where(Post.visible == True)
+  render_posts = posts.order_by(Post.time.desc()).paginate(page, Config.post_per_page)
+  if posts.count() > Config.post_per_page*page:
     if page == 1:
       return render_template("posts.html",posts = render_posts, page = page, show_prev = False, show_next = True)
     else:
@@ -58,8 +58,11 @@ def view_post_only_id(post_id):
 
 @blog.route(Routes.view_post)
 def view_post(post_id,post_url):
-  post = Post.get(Post.id == post_id)
-  return render_template("post.html",post = post)
+  try:
+    post = Post.get(Post.id == post_id, Post.visible)
+    return render_template("post.html",post = post)
+  except Post.DoesNotExist:
+    return "404", 404
 
 
 
@@ -72,8 +75,14 @@ def view_post(post_id,post_url):
 #     # #####  #    # # #    # 
 
 
-def validate_post_form():
-  post = Post()
+def validate_post_form(post_id = None):
+  if post_id:
+    try:
+      post = Post.get(Post.id == post_id)
+    except Post.DoesNotExist:
+      return None
+  else:
+    post = Post()
 
   post.isError = True
   if validate_form_field(request.form,"title"):
@@ -99,6 +108,11 @@ def validate_post_form():
     post.url = post.create_url(clean_string(request.form["customUrl"]))
   else:
     post.url = post.create_url(post.title)
+
+  if request.form.get('hide'):
+    post.visible = False
+  else:
+    post.visible = True
 
   post.isError = False
   return post
@@ -135,6 +149,28 @@ def admin_add_post():
     except Exception as e:
       return generate_error(str(e))
 
+@blog.route(Routes.admin_edit_post, methods=["GET", "POST"])
+def admin_edit_post(post_id):
+  if request.method == "GET":
+      try:
+        post = Post.get(Post.id == post_id)
+        return render_template("editPost.html",post = post)
+      except Post.DoesNotExist:
+        return redirect(url_for('blog.admin'))
+  else:
+    try:
+      post = validate_post_form(post_id)
+      if post:
+        if not post.isError:
+          post.save()
+          return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
+        else:
+          return generate_error(post.error)
+      else:
+        return generate_error("Can't find post with ID " + post_id)
+    except Exception as e:
+      return generate_error(str(e))
+
 @blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
 def admin_delete_post(post_id):
     if request.method == "DELETE":
@@ -142,7 +178,7 @@ def admin_delete_post(post_id):
             post = Post.get(Post.id == post_id)
             post.delete_instance()
             return jsonify(status = "OK",postRemoved = post_id)
-        except:
+        except Post.DoesNotExist:
             return generate_error("Can't find post with Id " + str(post_id))
     else:
         return redirect(url_for('blog.admin'))

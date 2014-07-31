@@ -11,8 +11,9 @@ function formValidate(){
     return true;
 }
 
-function postForm(url,operation){
+function postForm(url){
     if(formValidate()){
+        console.log($("#form").serialize());
         $.ajax(
         {
             url: url,
@@ -23,7 +24,7 @@ function postForm(url,operation){
                 if (result.status == "OK"){
                     window.location =  result.url;
                 }else{
-                    alert ("Can't " + operation + " this post.\nError: " + result.error);
+                    alert ("Can't complete operation.\nError: " + result.error);
                 }
                 
             },
@@ -36,6 +37,6 @@ function postForm(url,operation){
     }
 }
 
-$( "#editorAddPost" ).click(function() {
-        postForm(baseAdminAddUrl, "add")
+$( "#editorApply" ).click(function() {
+        postForm(saveEditsUrl)
 });

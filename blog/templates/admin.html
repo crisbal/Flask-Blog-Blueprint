@@ -32,6 +32,7 @@
         <th>Id</th>
         <th>Title</th>
         <th>Date</th>
+        <th>Visible</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
@@ -40,12 +41,13 @@
             <td>{{ post.id }}</td>
             <td><a href="{{url_for('blog.view_post', post_id = post.id, post_url = post.url)}}" >{{ post.title }}</a></td>
             <td>{{ post.time.strftime('%d %b, %H:%M') }}</td>
-            <td><div class="adminEditButton" post-id="{{ post.id }}" >E</div></td>
+            <td>{{ post.visible }}</td>
+            <td><a href="{{url_for('blog.admin_edit_post', post_id=post.id)}}"class="adminEditButton">E</a></td>
             <td><div class="adminDeleteButton" post-id="{{ post.id }}" >X</div></td>
         </tr>
     {% else %}
         <tr >
-            <td colspan="5">No post found</td>
+            <td colspan="6">No post found</td>
         </tr>
     {% endfor %}
 </table>

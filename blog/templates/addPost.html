@@ -1,38 +1,20 @@
-{% extends "base.html" %}
+{% extends "editor.html" %}
 
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('.static', filename='css/editor.css') }}" />
-    
+    {{ super() }}
     <script>
-        baseAdminAddUrl = "{{ url_for('blog.admin_add_post')}}" 
-        baseAdminPreviewUrl = "{{ url_for('blog.admin_add_post')}}" 
+        saveEditsUrl = "{{ url_for('blog.admin_add_post')}}" 
     </script>
 {% endblock %}
 
-
 {% block title %}
-    Add a post
-{% endblock %}
-    
-{% block content %}
-
-<h1 class="addPostTitle">Add a post</h1>
-<span class="addPostSubtitle">Please fill in all the required fields.</span>
-<div class="postEditor">
-    <form id="form" onsubmit="return false;">
-        <input type="text" name="title" id="title" class="postEditorTitle" placeholder="Title" autocomplete="off" required>
-        <br>
-        <input type="text" name="shortDescription" id="shortDescription" class="postEditorDesc" placeholder="Short Description of the post" autocomplete="off" required>
-        <br>
-        <textarea name="body" id="body" class="postEditorBody" rows="25" required>Post Content, you can use markdown, HTML will be escaped.</textarea>
-        <br>
-        <input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url Text" autocomplete="off">
-        <br>
-        <input type="submit" class="postEditorApply" id="editorAddPost" value="Add Post">
-    </form>
-</div>
-<script src="{{ url_for('.static', filename='js/editor.js') }}"></script>
-
+    Add new post
 {% endblock %}
 
+
+{% block editorTitle %}Add a new post to the blog{% endblock %}
+{% block editorSubtitle %}Please fill in all the required fields. <br>Any unsaved change will be lost{% endblock %}
+
+
+{% block actionOnPost %}Add{% endblock %}

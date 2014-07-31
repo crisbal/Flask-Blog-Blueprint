@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/editor.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+<h1 class="postEditorTitle">{% block editorTitle %}{% endblock %}</h1>
+<span class="postEditorSubtitle">{% block editorSubtitle %}{% endblock %}</span>
+<div class="postEditor">
+    <form id="form" onsubmit="return false;">
+        <input type="hidden" name="postId" id="id" value="{% block idValue %}{% endblock %}">
+
+        <input type="text" name="title" id="title" class="postEditorTitle" placeholder="Title of the post" autocomplete="off" value="{% block titleValue %}{% endblock %}" required>
+        <br>
+
+        <input type="text" name="shortDescription" id="shortDescription" class="postEditorDesc" placeholder="Short Description of the post" autocomplete="off" value="{% block short_descriptionValue %}{% endblock %}" required>
+        <br>
+
+        <textarea name="body" id="body" class="postEditorBody" rows="25" placeholder="Body of the post. You can use markdown." required>{% block bodyValue %}{% endblock %}</textarea>
+        <br>
+
+        <input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url for the post" autocomplete="off" value="{% block urlValue %}{% endblock %}" >
+        <input type="checkbox" name="hide" id="hide" value="hide" class="postEditorHide" {% block hideValue %}{% endblock %}><label for="hide">Make hidden post</label><br><br>
+
+
+        <input type="submit" class="postEditorApply" id="editorApply" value="{% block actionOnPost %}{% endblock %} Post">
+    </form>
+</div>
+<script src="{{ url_for('.static', filename='js/editor.js') }}"></script>
+
+{% endblock %}
+

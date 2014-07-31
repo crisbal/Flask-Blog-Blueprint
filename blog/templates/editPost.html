@@ -1,0 +1,27 @@
+{% extends "editor.html" %}
+
+
+{% block head %}
+    {{ super() }}
+    <script>
+        saveEditsUrl = "{{ url_for('blog.admin_edit_post', post_id = post.id)}}" 
+    </script>
+{% endblock %}
+
+{% block title %}
+    Editing a post
+{% endblock %}
+
+
+{% block editorTitle %}Edit post with Id {{post.id}}{% endblock %}
+{% block editorSubtitle %}If you don't apply the changes the post will be back at its original state{% endblock %}
+
+{% block idValue %}{{post.id}}{% endblock %}
+{% block titleValue %}{{post.title}}{% endblock %}
+{% block short_descriptionValue %}{{post.short_description}}{% endblock %}
+{% block bodyValue %}{{post.body}}{% endblock %}
+{% block urlValue %}{{post.url}}{% endblock %}
+
+{% block hideValue %}{% if not post.visible %}hide{% endif %}{% endblock %}
+
+{% block actionOnPost %}Edit{% endblock %}

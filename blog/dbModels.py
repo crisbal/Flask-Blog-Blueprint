@@ -17,6 +17,7 @@ class Post(BaseModel):
     body = TextField()
     time = DateTimeField(default=datetime.now)
     url = CharField(max_length=128)
+    visible = BooleanField(default=True)
 
     @staticmethod
     def create_url(string):
