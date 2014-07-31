@@ -12,7 +12,7 @@ blog = Blueprint("blog", __name__, template_folder=Config.template_folder, stati
 
 
 def init(app):
-    md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True,escape=True)
+    md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True,escape=True,wrap=True, toc=True)
     md.init_app(app)
 
 

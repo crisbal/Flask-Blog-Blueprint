@@ -10,8 +10,9 @@
         {% endblock %}
     </head>
     <body>
-        <div id="header">
-        </div>
+        <header>
+            <a href="{{url_for('blog.index')}}"><span class="blogTitle">Just a Blog made with Flask</span></a>
+        </header>
 
         <div id="content">
             {% block content %}
@@ -19,7 +20,8 @@
             {% endblock %}
         </div>
 
-        <div id="footer">
-        </div>
+        <footer>
+            By <a href="https://github.com/cris9696/">Cristian Baldi</a>
+        <footer/>
     </body>
 </html>

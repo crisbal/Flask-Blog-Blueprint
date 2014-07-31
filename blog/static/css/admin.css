@@ -1,10 +1,26 @@
+.adminAddPost{
+    padding: 0.5em;
+    background-color: white;
+    border: 4px solid black;
+    border-radius: 1em;
+    text-align: center;
+    font-size: 1.5em;
+}
+
 .adminPostsTable{
     width: 100%;
 }
 .adminPostsTable th{
     border: 1px solid black;
+    background-color: white;
 }
 
+.adminPostsTable tr{
+    background-color: #DADADA;
+}
+.adminPostsTable tr:nth-child(even) {
+    background-color: #C4C4C4;
+}
 .adminPostsTable td{
     padding: 0.5    em;
     border: 1px solid black;

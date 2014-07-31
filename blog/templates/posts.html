@@ -32,11 +32,11 @@
     <div class="otherPages">
         {% if page %}
             {% if show_prev %}
-                <a class="linkShowNewer" href="{{url_for('blog.show_page',page= page-1)}}">Newer</a>
+                <a class="linkShowNewer" href="{{url_for('blog.show_page',page= page-1)}}">Newer Posts</a>
             {% endif %}
 
             {% if show_next %}
-                <a class="linkShowOlder" href="{{url_for('blog.show_page',page= page+1)}}">Older</a>
+                <a class="linkShowOlder" href="{{url_for('blog.show_page',page= page+1)}}">Older Posts</a>
             {% endif %}
         {% endif %}
     </div>

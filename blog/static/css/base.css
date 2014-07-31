@@ -4,16 +4,50 @@ body,html{
 }
 
 body{
-    background-color: #BEB9B9;
-    padding: 1em;
+    background-color: #D4D4D4;
 }
 
 *{
     box-sizing: border-box;
 }
-.postPreview{
-    border: 1px solid black;
+
+header{
+    width: 100%;
     padding: 1em;
+    text-align: center;
+    background-color: white;
+    border-bottom: 1px solid black;
+}
+
+header a, header a:link, header a:visited{
+    text-decoration: none;
+    color: black;
+}
+.blogTitle{
+    font-size: 2em;
+    
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    border-top: 1px solid black;
+}
+
+
+#content{
+    padding: 1.5em;
+}
+
+.postPreview, .post{
+    border: 3px solid black;
+    padding: 1em;
+    background-color: white;
+    border-radius: 1em;
 }
 
 .postTitle{
@@ -21,9 +55,9 @@ body{
 }
 
 
-.postTitleLink, .postTitleLink:link, .postTitleLink:visited
+.postTitleLink, .postTitleLink:link, .postTitleLink:visited, .readMoreButton a, .readMoreButton a:link, .readMoreButton a:visited
 {
-    font-size: 1.3em;
+    font-size: 1.5em;
     color: green;
     text-decoration:underline;
 }
@@ -35,14 +69,14 @@ body{
 }
 
 .postShortDescription{
-    font-size: 1.1em;
+    font-size: 1.3em;
     font-style: italic;
     margin-bottom: 1em;
 }
 
 
 .postBodyShort{
-    margin-bottom: 1em;
+    margin-bottom: 1.3em;
 }
 .readMoreButton{
     text-align: right;
