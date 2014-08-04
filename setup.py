@@ -1,4 +1,4 @@
-from blog.dbModels import *
+from blog.models import *
 
 import logging
 logger = logging.getLogger('peewee')

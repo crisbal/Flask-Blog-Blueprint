@@ -1,12 +1,14 @@
-from flask import Blueprint, render_template, abort, current_app, request, redirect, url_for, jsonify
-
-from peewee import SqliteDatabase
-
-from dbModels import *
+from flask import Blueprint, render_template, abort, current_app, request, redirect, url_for, jsonify, session
 
 from flask.ext.misaka import Misaka
 
+from models import *
+
+import hashlib
+
 import Routes, Config
+
+
 
 blog = Blueprint("blog", __name__, template_folder=Config.template_folder, static_folder=Config.static_folder)
 
@@ -14,8 +16,7 @@ blog = Blueprint("blog", __name__, template_folder=Config.template_folder, stati
 def init(app):
     md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True,escape=True,wrap=True, toc=True)
     md.init_app(app)
-
-
+    app.secret_key = Config.secret_key
 
 ######                       
 #     # #       ####   ####  
@@ -110,17 +111,57 @@ def render_posts(posts,page = None,total_posts = None,tag = None):
 ####### #    # #    # # #  # # 
 #     # #    # #    # # #   ## 
 #     # #####  #    # # #    # 
+@blog.route(Routes.admin_login, methods=['GET', 'POST'])
+def admin_login():
+    if is_logged_in():
+        return redirect(url_for('blog.admin_panel'))
+
+    if request.method == 'POST':
+        if request.form.get('username', None) and request.form.get('password', None):
+            username = request.form.get('username')
+            password = hashlib.sha512(request.form.get('password').decode()).hexdigest()
+            if username == Config.username and password == Config.password:
+              session_login()
+              return redirect(url_for('blog.admin_panel'))
+            else:
+              return render_template('login.html', error='Wrong username or password')  
+        else:
+            return render_template('login.html', error='Username or password missing')
+    else:
+        return render_template('login.html')
+
+@blog.route(Routes.admin_logout)
+def admin_logout():
+    session.clear()
+    return redirect(url_for('blog.admin_login'))
+
+def session_login():
+    session['logged_in']=True
+    
+
+
+def is_logged_in():
+    return True if 'logged_in' in session else False
+
 
 @blog.route(Routes.admin_panel)
-def admin():
+def admin_panel():
+  if is_logged_in():
     posts = Post.select().order_by(Post.time.desc())
     return render_template("admin.html",posts = posts)
+  else:
+    return redirect(url_for("blog.admin_login"))
 
 @blog.route(Routes.admin_add_post, methods=["GET", "POST"])
-def admin_add_post():
+def admin_add_post():  
   if request.method == "GET":
-      return render_template("addPost.html")
+      if is_logged_in():
+        return render_template("addPost.html")
+      else:
+        return redirect(url_for("blog.admin_login"))
   else:
+    if not is_logged_in():
+      return generate_error("Not logged in")
     try:
       post = validate_post_form()
       if not post.isError:  
@@ -132,15 +173,24 @@ def admin_add_post():
     except Exception as e:
       return generate_error(str(e))
 
+    
+
+
 @blog.route(Routes.admin_edit_post, methods=["GET", "POST"])
-def admin_edit_post(post_id):
+def admin_edit_post(post_id):  
   if request.method == "GET":
+    if is_logged_in():
       try:
         post = Post.get(Post.id == post_id)
         return render_template("editPost.html",post = post)
       except Post.DoesNotExist:
         return redirect(url_for('blog.admin'))
+    else:
+      return redirect(url_for("blog.admin_login"))
   else:
+    if not is_logged_in():
+      return generate_error("Not logged in")
+
     try:
       post = validate_post_form(post_id)
       if post:
@@ -155,17 +205,21 @@ def admin_edit_post(post_id):
     except Exception as e:
       return generate_error(str(e))
 
+
 @blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
 def admin_delete_post(post_id):
-    if request.method == "DELETE":
-        try:
-            post = Post.get(Post.id == post_id)
-            post.delete_instance()
-            return jsonify(status = "OK",postRemoved = post_id)
-        except Post.DoesNotExist:
-            return generate_error("Can't find post with Id " + str(post_id))
-    else:
-        return redirect(url_for('blog.admin'))
+  if request.method == "DELETE":
+      if not is_logged_in():
+        return generate_error("Not logged in")
+
+      try:
+          post = Post.get(Post.id == post_id)
+          post.delete_instance()
+          return jsonify(status = "OK",postRemoved = post_id)
+      except Post.DoesNotExist:
+          return generate_error("Can't find post with Id " + str(post_id))
+  else:
+      return redirect(url_for('blog.admin'))
 
 
 def string_to_tag_list(string):

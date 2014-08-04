@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/admin.css') }}" />
     
     <script>
-        baseAdminUrl = "{{ url_for('blog.admin') }}"
+        baseAdminUrl = "{{ url_for('blog.admin_panel') }}"
         baseAdminDeleteUrl = "{{ url_for('blog.admin_delete_post', post_id = -1) }}"
     </script>
 {% endblock %}
@@ -50,7 +50,9 @@
         </tr>
     {% endfor %}
 </table>
+<br>
 
+<a href="{{url_for('blog.admin_logout')}}">Logout</a>
 <script src="{{ url_for('.static', filename='js/admin.js') }}"></script>
 
 {% endblock %}

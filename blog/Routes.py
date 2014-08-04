@@ -13,6 +13,8 @@ view_post = "/view/<int:post_id>/<post_url>/"  #<int:post_id> & <post_url> are r
 view_tag = "/tag/<tag>"
 
 
+admin_login = "/admin/login"
+admin_logout = "/admin/logout"
 admin_panel = "/admin/"
 admin_add_post = "/admin/add/"
 admin_edit_post = "/admin/edit/<int:post_id>"
