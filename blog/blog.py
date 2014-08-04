@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, abort, current_app, request, redir
 
 from peewee import SqliteDatabase
 
-from dbModels import Post
+from dbModels import *
 
 from flask.ext.misaka import Misaka
 
@@ -30,25 +30,14 @@ def index():
   return show_page(1)
 
 
-
 @blog.route(Routes.show_page)
 def show_page(page):
   if(page<=0):
     return "404", 404
 
   posts = Post.select().where(Post.visible == True)
-  render_posts = posts.order_by(Post.time.desc()).paginate(page, Config.post_per_page)
-  if posts.count() > Config.post_per_page*page:
-    if page == 1:
-      return render_template("posts.html",posts = render_posts, page = page, show_prev = False, show_next = True)
-    else:
-      return render_template("posts.html",posts = render_posts, page = page, show_prev = True, show_next = True)
-  else:
-    if page == 1:
-      return render_template("posts.html",posts = render_posts, page = page, show_prev = False, show_next = False)
-    else:
-      return render_template("posts.html",posts = render_posts, page = page, show_prev = True, show_next = False)
-
+  posts_to_render = posts.order_by(Post.time.desc()).paginate(page, Config.post_per_page)
+  return render_posts(posts_to_render,page,posts.count())
 
 
 @blog.route(Routes.view_post_only_id)
@@ -60,9 +49,57 @@ def view_post_only_id(post_id):
 def view_post(post_id,post_url):
   try:
     post = Post.get(Post.id == post_id, Post.visible)
-    return render_template("post.html",post = post)
+    tags = string_to_tag_list(post.tags)
+    return render_template("post.html",post = post, tags = tags)
   except Post.DoesNotExist:
     return "404", 404
+
+@blog.route(Routes.view_tag)
+def view_tag(tag):
+  try:
+    tag_id = Tag.get(Tag.tag == tag.lower())
+  except Tag.DoesNotExist:
+    return render_posts(None, tag = tag)
+
+  posts = [x.post for x in Post_To_Tag.select().where(Post_To_Tag.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
+
+  return render_posts(posts, tag = tag)
+  
+
+
+def render_posts(posts,page = None,total_posts = None,tag = None):
+  show_prev = False
+  show_next = False
+
+  empty = False
+  if not posts:
+    empty = True
+  else:
+    if not type(posts) is list:
+      if posts.count() == 0:
+        empty = True
+    else:
+      if len(posts) == 0:
+        empty = True
+
+  if not empty:
+    if page and total_posts:
+      if page == 1:
+        show_prev = False
+      else:
+        show_prev = True
+
+      if total_posts > page*Config.post_per_page: #if there is something in the next page
+        show_next = True
+      else: #this is last page
+        show_next = False
+
+    return render_template("posts.html", tag = tag, posts = posts, page = page, show_prev = show_prev, show_next = show_next)  
+  else: #no post given! error!
+    if tag:
+      return render_template("posts.html",tag = tag, error = "No post tagged with " + tag)
+    else:
+      return render_template("posts.html",error = "No Post Found")
 
 
 
@@ -74,6 +111,81 @@ def view_post(post_id,post_url):
 #     # #    # #    # # #   ## 
 #     # #####  #    # # #    # 
 
+@blog.route(Routes.admin_panel)
+def admin():
+    posts = Post.select().order_by(Post.time.desc())
+    return render_template("admin.html",posts = posts)
+
+@blog.route(Routes.admin_add_post, methods=["GET", "POST"])
+def admin_add_post():
+  if request.method == "GET":
+      return render_template("addPost.html")
+  else:
+    try:
+      post = validate_post_form()
+      if not post.isError:  
+        post.save()
+        tag(post)
+        return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
+      else:
+        return post.error
+    except Exception as e:
+      return generate_error(str(e))
+
+@blog.route(Routes.admin_edit_post, methods=["GET", "POST"])
+def admin_edit_post(post_id):
+  if request.method == "GET":
+      try:
+        post = Post.get(Post.id == post_id)
+        return render_template("editPost.html",post = post)
+      except Post.DoesNotExist:
+        return redirect(url_for('blog.admin'))
+  else:
+    try:
+      post = validate_post_form(post_id)
+      if post:
+        if not post.isError:
+          post.save()
+          tag(post)
+          return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
+        else:
+          return generate_error(post.error)
+      else:
+        return generate_error("Can't find post with ID " + post_id)
+    except Exception as e:
+      return generate_error(str(e))
+
+@blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
+def admin_delete_post(post_id):
+    if request.method == "DELETE":
+        try:
+            post = Post.get(Post.id == post_id)
+            post.delete_instance()
+            return jsonify(status = "OK",postRemoved = post_id)
+        except Post.DoesNotExist:
+            return generate_error("Can't find post with Id " + str(post_id))
+    else:
+        return redirect(url_for('blog.admin'))
+
+
+def string_to_tag_list(string):
+  if len(string.replace(",","").strip())>0:
+    tags = [ x.strip().replace(" ","_") for x in string.split(",") if len(x.strip())>0]
+    return tags
+  else:
+    return []
+
+def tag(post):
+  if validate_form_field(request.form,"tags"):
+    tags = request.form["tags"]
+    if len(tags.replace(",","").strip())>0:
+      tags = [ x.strip() for x in tags.split(",") if len(x.strip())>0]
+      for tag in tags:
+        post.addTag(tag)
+    else:
+      post.addTag("untagged")
+  else:
+    post.addTag("untagged")
 
 def validate_post_form(post_id = None):
   if post_id:
@@ -103,7 +215,6 @@ def validate_post_form(post_id = None):
     post.error = generate_error("Body is required.")
     return post
 
-  print(len(request.form["customUrl"]))
   if len(clean_string(request.form["customUrl"]))>0:
     post.url = post.create_url(clean_string(request.form["customUrl"]))
   else:
@@ -114,6 +225,8 @@ def validate_post_form(post_id = None):
   else:
     post.visible = True
 
+  post.tags = request.form["tags"].strip().lower()
+  
   post.isError = False
   return post
 
@@ -126,61 +239,3 @@ def clean_string(string):
 
 def generate_error(error):
   return jsonify(status = "ERROR", error = error)
-
-
-@blog.route(Routes.admin_panel)
-def admin():
-    posts = Post.select().order_by(Post.time.desc())
-    return render_template("admin.html",posts = posts)
-
-@blog.route(Routes.admin_add_post, methods=["GET", "POST"])
-def admin_add_post():
-  if request.method == "GET":
-      return render_template("addPost.html")
-  else:
-    try:
-      post = validate_post_form()
-      if not post.isError:  
-        
-        post.save()
-        return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
-      else:
-        return post.error
-    except Exception as e:
-      return generate_error(str(e))
-
-@blog.route(Routes.admin_edit_post, methods=["GET", "POST"])
-def admin_edit_post(post_id):
-  if request.method == "GET":
-      try:
-        post = Post.get(Post.id == post_id)
-        return render_template("editPost.html",post = post)
-      except Post.DoesNotExist:
-        return redirect(url_for('blog.admin'))
-  else:
-    try:
-      post = validate_post_form(post_id)
-      if post:
-        if not post.isError:
-          post.save()
-          return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
-        else:
-          return generate_error(post.error)
-      else:
-        return generate_error("Can't find post with ID " + post_id)
-    except Exception as e:
-      return generate_error(str(e))
-
-@blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
-def admin_delete_post(post_id):
-    if request.method == "DELETE":
-        try:
-            post = Post.get(Post.id == post_id)
-            post.delete_instance()
-            return jsonify(status = "OK",postRemoved = post_id)
-        except Post.DoesNotExist:
-            return generate_error("Can't find post with Id " + str(post_id))
-    else:
-        return redirect(url_for('blog.admin'))
-
-

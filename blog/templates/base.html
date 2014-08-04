@@ -12,9 +12,18 @@
     <body>
         <header>
             <a href="{{url_for('blog.index')}}"><span class="blogTitle">Just a Blog made with Flask</span></a>
+            <form class="searchForm" onsubmit="return search();">
+                <br>
+                <input type="search" placeholder="Search Tag" name="searchInput" id="searchInput" class="searchInput" class="headerSearchInput">
+                <input type="submit"  value="Search" name="searchSubmit" id="searchSubmit" class="searchSubmit">
+            </form>
         </header>
 
         <div id="content">
+            {% if error %}
+                <div class="error">{{error}}</div>
+            {% endif %}
+
             {% block content %}
             
             {% endblock %}
@@ -23,5 +32,10 @@
         <footer>
             By <a href="https://github.com/cris9696/">Cristian Baldi</a>
         <footer/>
+
+        <script>
+            baseTagUrl = "{{ url_for('blog.view_tag',tag = "") }}";
+        </script> 
+        <script src="{{ url_for('.static', filename='js/base.js') }}"></script>
     </body>
 </html>

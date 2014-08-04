@@ -10,6 +10,8 @@ show_page = "/page/<int:page>/"    #<int:page> required in the url
 
 view_post_only_id = "/view/<int:post_id>/" #<int:post_id> required in the url
 view_post = "/view/<int:post_id>/<post_url>/"  #<int:post_id> & <post_url> are required in the url
+view_tag = "/tag/<tag>"
+
 
 admin_panel = "/admin/"
 admin_add_post = "/admin/add/"

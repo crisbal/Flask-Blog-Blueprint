@@ -23,8 +23,9 @@
         <br>
 
         <input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url for the post" autocomplete="off" value="{% block urlValue %}{% endblock %}" >
-        <input type="checkbox" name="hide" id="hide" value="hide" class="postEditorHide" {% block hideValue %}{% endblock %}><label for="hide">Make hidden post</label><br><br>
+        <input type="checkbox" name="hide" id="hide" value="hide" class="postEditorHide" {% block hideValue %}{% endblock %}><label for="hide">Make hidden post</label><br>
 
+        <label for="tags">Tags: </label><input type="text" class="postEditorTags" placeholder="Add tags separated by a ','" name="tags" id="tags" autocomplete="off" value="{% block tagsValue %}{% endblock %}"><br><br>
 
         <input type="submit" class="postEditorApply" id="editorApply" value="{% block actionOnPost %}{% endblock %} Post">
     </form>

@@ -24,4 +24,6 @@
 
 {% block hideValue %}{% if not post.visible %}hide{% endif %}{% endblock %}
 
+{% block tagsValue %}{{post.tags}}{% endblock %}
+
 {% block actionOnPost %}Edit{% endblock %}

@@ -1,9 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}All posts{% endblock %}
+{# {% block title %}
+    {% if tag %}
+        Post tagged with {{ tag }}
+    {% elif page %}
+        {% if page == 1 %}
+            Latest Posts
+        {% else %}
+            Page {{ page }}
+        {% endif %}
+    {% else %}
+        All Posts
+    {% endif %}
+{% endblock %} #}
 
+{% block title %}{% if tag %}Posts tagged with "{{ tag }}"{% elif page %}{% if page == 1 %}Latest Posts{% else %}Page {{ page }}{% endif %}{% else %}All Posts{% endif %}{% endblock %}
 
 {% block content %}
+
+{% if tag and not error%}
+<div class="postsTaggedWith">"{{tag}}" posts.</div>
+{% endif %}
 
 {% for post in posts %}
     <div class="postPreview">
@@ -26,7 +43,7 @@
     </div>
     <br>
 {% else %}
-    <div class="postPreview notFound">No post found</div>
+    {# <div class="postPreview notFound">No post found</div> #}
 {% endfor %}
 
     <div class="otherPages">
