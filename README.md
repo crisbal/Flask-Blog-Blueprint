@@ -43,12 +43,9 @@ You can view blueprint as an extensions for your Flask app and each blueprint is
 * Install requirements.txt via pip
 * Open the main file of your blog and these lines after "app = Flask(\__name\__)" or its equivalent
 
->from blog import blog,Config
-
+    from blog import blog,Config
     blog.init(app)
-
     app.register_blueprint(blog.blog, url_prefix=Config.base_url)
-    
     \#where app is the name of your flask object
 
 * Configure the blog by editing the files "Routes.py" and "Config.py" located in the blog folder you just pasted
