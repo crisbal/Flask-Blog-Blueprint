@@ -1,5 +1,5 @@
 #HERE YOU CAN EDIT THE ROUTES (the urls) for the app. 
-#With this config you can only have 1 route per function.
+#With this config you can only have 1 route per view.
 #To avoid this you can manually edit the file blog.py.
 
 
