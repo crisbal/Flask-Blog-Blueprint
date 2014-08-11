@@ -1,11 +1,5 @@
 from blog.models import *
 
-import logging
-logger = logging.getLogger('peewee')
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler())
-
-
 db.connect()
 
 print("Creating 'Post' Table")
