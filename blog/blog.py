@@ -4,7 +4,7 @@ from flask.ext.misaka import Misaka
 
 from models import *
 
-import hashlib
+import hashlib, json
 
 import Routes, Config
 
@@ -17,6 +17,19 @@ def init(app):
     md = Misaka(autolink=True,tables=True,fenced_code=True,no_intra_emphasis=True,strikethrough=True,escape=True,wrap=True, toc=True)
     md.init_app(app)
     app.secret_key = Config.secret_key
+
+
+def generate_json_error(**kwargs):
+  return jsonify(status = "ERROR", **kwargs)
+
+def generate_json_success(**kwargs):
+  return jsonify(status = "OK", **kwargs)
+
+
+def get_posts_at_page(page):
+  all_posts = Post.select().where(Post.visible == True)
+  posts_to_return = all_posts.order_by(Post.time.desc()).paginate(page, Config.post_per_page)
+  return posts_to_return, all_posts.count()
 
 ######                       
 #     # #       ####   ####  
@@ -36,9 +49,9 @@ def show_page(page):
   if(page<=0):
     return "404", 404
 
-  posts = Post.select().where(Post.visible == True)
-  posts_to_render = posts.order_by(Post.time.desc()).paginate(page, Config.post_per_page)
-  return render_posts(posts_to_render,page,posts.count())
+  posts_to_render,total_posts  = get_posts_at_page(page)
+
+  return render_posts(posts_to_render,page,total_posts)
 
 
 @blog.route(Routes.view_post_only_id)
@@ -60,11 +73,11 @@ def view_tag(tag):
   try:
     tag_id = Tag.get(Tag.tag == tag.lower())
   except Tag.DoesNotExist:
-    return render_posts(None, tag = tag)
+    return render_posts(None, tag = tag.lower())
 
   posts = [x.post for x in Post_To_Tag.select().where(Post_To_Tag.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
 
-  return render_posts(posts, tag = tag)
+  return render_posts(posts, tag = tag.lower())
   
 
 
@@ -161,7 +174,7 @@ def admin_add_post():
         return redirect(url_for("blog.admin_login"))
   else:
     if not is_logged_in():
-      return generate_error("Not logged in")
+      return generate_json_error("Not logged in")
     try:
       post = validate_post_form()
       if not post.isError:  
@@ -171,7 +184,7 @@ def admin_add_post():
       else:
         return post.error
     except Exception as e:
-      return generate_error(str(e))
+      return generate_json_error(str(e))
 
     
 
@@ -189,7 +202,7 @@ def admin_edit_post(post_id):
       return redirect(url_for("blog.admin_login"))
   else:
     if not is_logged_in():
-      return generate_error("Not logged in")
+      return generate_json_error("Not logged in")
 
     try:
       post = validate_post_form(post_id)
@@ -199,25 +212,25 @@ def admin_edit_post(post_id):
           tag(post)
           return jsonify(status = "OK", url = url_for("blog.view_post",post_id = post.id, post_url=post.url))
         else:
-          return generate_error(post.error)
+          return generate_json_error(post.error)
       else:
-        return generate_error("Can't find post with ID " + post_id)
+        return generate_json_error("Can't find post with ID " + post_id)
     except Exception as e:
-      return generate_error(str(e))
+      return generate_json_error(str(e))
 
 
 @blog.route(Routes.admin_delete_post, methods=["GET", "DELETE"])
 def admin_delete_post(post_id):
   if request.method == "DELETE":
       if not is_logged_in():
-        return generate_error("Not logged in")
+        return generate_json_error("Not logged in")
 
       try:
           post = Post.get(Post.id == post_id)
           post.delete_instance()
           return jsonify(status = "OK",postRemoved = post_id)
       except Post.DoesNotExist:
-          return generate_error("Can't find post with Id " + str(post_id))
+          return generate_json_error("Can't find post with Id " + str(post_id))
   else:
       return redirect(url_for('blog.admin'))
 
@@ -254,19 +267,19 @@ def validate_post_form(post_id = None):
   if validate_form_field(request.form,"title"):
     post.title = clean_string(request.form["title"])
   else:
-    post.error = generate_error("Title is required.")
+    post.error = generate_json_error("Title is required.")
     return post
   
   if validate_form_field(request.form,"shortDescription"):
     post.short_description = clean_string(request.form["shortDescription"])
   else:
-    post.error = generate_error("Description is required.")
+    post.error = generate_json_error("Description is required.")
     return post
 
   if validate_form_field(request.form,"body"):
     post.body = clean_string(request.form["body"])
   else:
-    post.error = generate_error("Body is required.")
+    post.error = generate_json_error("Body is required.")
     return post
 
   if len(clean_string(request.form["customUrl"]))>0:
@@ -291,5 +304,63 @@ def validate_form_field(form,field):
 def clean_string(string):
   return string.strip()
 
-def generate_error(error):
-  return jsonify(status = "ERROR", error = error)
+
+
+
+   #    ######  ### 
+  # #   #     #  #  
+ #   #  #     #  #  
+#     # ######   #  
+####### #        #  
+#     # #        #  
+#     # #       ### 
+
+#https://github.com/coleifer/flask-peewee/blob/master/flask_peewee/utils.py#L70-L89
+def model_to_dictionary(model, fields=None, exclude=None):
+    model_class = type(model)
+    data = {}
+
+    fields = fields or {}
+    exclude = exclude or {}
+    curr_exclude = exclude.get(model_class, [])
+    curr_fields = fields.get(model_class, model._meta.get_field_names())
+
+    for field_name in curr_fields:
+        if field_name in curr_exclude:
+            continue
+        field_obj = model_class._meta.fields[field_name]
+        field_data = model._data.get(field_name)
+        if isinstance(field_obj, ForeignKeyField) and field_data and field_obj.rel_model in fields:
+            rel_obj = getattr(model, field_name)
+            data[field_name] = get_dictionary_from_model(rel_obj, fields, exclude)
+        else:
+            data[field_name] = field_data
+    return data
+
+@blog.route(Routes.api_get_page)
+def api_get_page(page):
+  if (page<=0):
+    return generate_json_error(error = "Invalid page number")
+
+  posts, total_posts = get_posts_at_page(page)
+  posts = [model_to_dictionary(post) for post in posts]
+  return generate_json_success(total_posts = total_posts, posts = posts)
+
+@blog.route(Routes.api_get_post)
+def api_get_post(post_id):
+  try:
+    post = Post.get(Post.id == post_id, Post.visible)
+    return generate_json_success(post = model_to_dictionary(post))
+  except Post.DoesNotExist:
+    return generate_json_error(error = "Can't find post with that id"), 404
+
+@blog.route(Routes.api_get_post_with_tag)
+def api_get_post_with_tag(tag):
+  try:
+    tag_id = Tag.get(Tag.tag == tag.lower())
+  except Tag.DoesNotExist:
+    return generate_json_success(tag = tag.lower(), total_posts = 0)
+
+  posts = [model_to_dictionary(x.post) for x in Post_To_Tag.select().where(Post_To_Tag.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
+
+  return generate_json_success(tag = tag.lower(), posts = posts)
