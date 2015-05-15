@@ -2,9 +2,9 @@
 
 ##What is blog-blueprint?
 
-blog-blueprint is a blueprint for Flask that add a blog system to any website running on Flask.
+blog-blueprint is a blueprint for Flask that adds a blog system to any website running on Flask.
 
-You can view blueprint as an extensions for your Flask app and each blueprint is 100% indipendent from other blueprints and from the main app. 
+You can view a blueprint as an extensions for your Flask app and each blueprint is 100% indipendent from other blueprints and from the main app. 
 
 ##What does blog-blueprint offer?
 
@@ -18,29 +18,29 @@ You can view blueprint as an extensions for your Flask app and each blueprint is
 * Customizable urls / routes
 * Fully stylable interface and support for custom themes
 * Fully editable templates 
-* Basic but powerfull admin interface with all the needed functionality on the posts (edit,delete,hide/show)
+* Basic but powerfull admin interface with all the needed functionality for posts (edit,delete,hide/show)
 
 ##TODO
 
 * Comments
 * Finish the API
-* Write a mobile app for the blog
-* Add a configuration / setup page
-* Responsive admin interface
-* 
+* Write a better admin interface
+* Write a better base theme
+* Improve the code
+* Implement a configutation page
 
 ##What do I need to run blog-blueprint?
 
 * A Flask app
 * A text editor
-* See requirements.txt and install all the packages via pip
+* See requirements.txt and install all the packages via "pip"
 
 
 ##How do I install / enable it?
 
 * Download / fork this repo
 * Copy "blog" folder from the main folder of the repo and paste it in the main folder of your Flask webiste (where the main file is located)
-* Install requirements.txt via pip
+* Install requirements.txt via pip using the command "pip install -r requirements.txt"
 * Open the main file of your blog and these lines after "app = Flask(\__name\__)" or its equivalent
 
 ```
@@ -51,7 +51,8 @@ app.register_blueprint(blog.blog, url_prefix=Config.base_url)
 ```
 * Configure the blog by editing the files "Routes.py" and "Config.py" located in the blog folder you just pasted
     * I suggest to edit at least secret_key, username and password in "Config.py"
-* Restart your main app
+* Run "setup.py" from the root directory of your app.
+* Restart your app
 
 
 ##License
