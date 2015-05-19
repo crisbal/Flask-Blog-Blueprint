@@ -19,33 +19,21 @@
 {% block content %}
 
 {% if tag and not error%}
-<div class="postsTaggedWith">"{{tag}}" posts.</div>
+<div class="searchInfo">Post tagged with "{{ tag }}".</div>
 {% endif %}
 
 {% for post in posts %}
     <div class="postPreview">
-        <a class="postTitleLink" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">
-            <div class="postTitle">
-                {{ post.title }}
-            </div> 
-        </a>
-        <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
-
-        <div class="postShortDescription">{{ post.short_description }}</div>
-
-        <div class="postBodyShort">{{ post.body|truncate(200) }}</div>
         
-        <div class="readMoreButton">
-            <a href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">
-                Read More
-            </a>
-        </div>
+        <a class="postTitle" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">{{ post.title }}</a>
+        <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
+        
+        <div class="postShortDescription">{{ post.short_description }}</div>
     </div>
     <br>
 {% else %}
     {# <div class="postPreview notFound">No post found</div> #}
 {% endfor %}
-
     <div class="otherPages">
         {% if page %}
             {% if show_prev %}

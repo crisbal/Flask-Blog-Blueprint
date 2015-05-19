@@ -13,19 +13,10 @@
 
 
 {% block content %}
-<h1>Admin panel</h1>
-<p>Here you can manage your blog:
-<ul>
-    <li>Add, Update and Delete Posts</li>
-    <li>Delete Comments</li>
-</ul> 
+<a href="{{url_for('blog.admin_add_post')}}" class="adminAddPostLink"><div class="adminAddPost">Add a post</div></a>
+<br>
 
 <h2>Posts</h2>
-
-<a href="{{url_for('blog.admin_add_post')}}" class="adminAddPostLink"><div class="adminAddPost">Add a post</div></a>
-<br><br>
-
-<div class="adminPostTableTitle">All posts</div>
 <table class="adminPostsTable">
     <tr>
         <th>Id</th>

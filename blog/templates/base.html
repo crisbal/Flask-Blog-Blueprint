@@ -1,19 +1,24 @@
 <!doctype html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
         <title>{% block title %}{% endblock %} - My Blog</title>
+
         <link rel="stylesheet" href="{{ url_for('.static', filename='css/base.css') }}" />
         <script src="{{ url_for('.static', filename='js/jquery.js') }}"></script>
-        {% block head %}
+        
+            {% block head %}
         
         
         {% endblock %}
     </head>
     <body>
         <header>
-            <a href="{{url_for('blog.index')}}"><span class="blogTitle">Just a Blog made with Flask</span></a>
+            <a href="{{url_for('blog.index')}}"><h1 class="blogTitle">Just a Blog made with Flask</h1></a>
+            <br>
             <form class="searchForm" onsubmit="return search();">
-                <br>
                 <input type="search" placeholder="Search Tag" name="searchInput" id="searchInput" class="searchInput" class="headerSearchInput">
                 <input type="submit"  value="Search" name="searchSubmit" id="searchSubmit" class="searchSubmit">
             </form>
@@ -28,11 +33,7 @@
             
             {% endblock %}
         </div>
-
-        <footer>
-            By <a href="https://github.com/crisbal/">Cristian Baldi</a>
-        <footer/>
-
+        
         <script>
             baseTagUrl = "{{ url_for('blog.view_tag',tag = "") }}";
         </script> 

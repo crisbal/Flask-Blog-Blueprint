@@ -6,19 +6,19 @@
     
 {% block content %}
     <div class="post">
-        <div class="postTitle">
-            <a class="postTitleLink" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">{{ post.title }}</a>
-        </div> 
+        <a class="postTitle" href="{{ url_for('blog.view_post', post_id = post.id, post_url = post.url) }}">{{ post.title }}</a>
         <div class="postTime">{{ post.time.strftime('%d %b, %H:%M') }}</div>
         <div class="postShortDescription">{{ post.short_description }}</div>
         <div class="postBody">{{ post.body|markdown }}</div>
-
-        <div class="postTagsContainer">
-            Tags: 
-            {% for tag in tags %}
-                <span class="postTagContainer"><a href="{{ url_for('blog.view_tag',tag = tag) }}">{{ tag }}</a></span>
-            {% endfor %}
-        </div>
+        
+        {% if tags %}
+            <div class="postTagsContainer">
+                Tagged With: 
+                {% for tag in tags %}
+                    <a href="{{ url_for('blog.view_tag',tag = tag) }}"><div class="postTagContainer">{{ tag }}</div></a>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 

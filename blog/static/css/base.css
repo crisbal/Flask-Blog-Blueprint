@@ -1,13 +1,15 @@
-body,html{
-    margin: 0;
-    padding: 0;
-}
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700,400);
 
 body{
-    background-color: #D4D4D4;
+    background-color: #CCE9FF;
+    color: #161616;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.95em;
 }
 
 *{
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -15,86 +17,102 @@ header{
     width: 100%;
     padding: 1em;
     text-align: center;
-    background-color: white;
-    border-bottom: 1px solid black;
+    background-color: #62BEFF;
+    box-shadow: 0 0px 1px rgba(0,0,0,0.3);
 }
 
 header a, header a:link, header a:visited{
     text-decoration: none;
-    color: black;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.45);
 }
+
+header input{
+    font-size: 0.9em;
+    padding: 0.15em;
+}
+
 .blogTitle{
-    font-size: 2em;
+    font-size: 2.5em;
     
 }
-
-footer{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    background-color: white;
-    border-top: 1px solid black;
-}
-
 
 #content{
     padding: 1.5em;
 }
 
 .error{
-    background-color: #FF6E6E;
+    background-color: #FFB8B8;
     color: red;
     padding: 1em;
     margin-bottom: 1em;
     border: 1px solid red;
 }
 
-.postsTaggedWith{
+.searchInfo{
     padding: 1em;
     background-color: #BAEFF7;
     color: #0078C4;
     border: 1px solid #0078C4;
     margin-bottom: 1em;
 }
+
 .postPreview, .post{
-    border: 3px solid black;
     padding: 1em;
     background-color: white;
-    border-radius: 1em;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.4);
 }
 
 .postTitle{
     margin-bottom: 1em;
-}
-
-
-.postTitleLink, .postTitleLink:link, .postTitleLink:visited, .readMoreButton a, .readMoreButton a:link, .readMoreButton a:visited
-{
     font-size: 1.5em;
-    color: green;
+    color: #0597FF;
     text-decoration:underline;
 }
 
+.postTitle:hover{
+    text-decoration: none;
+}
 
 .postTime{
     font-size: 0.8em;
-    text-align: right;
+    float: right;
 }
 
 .postShortDescription{
-    font-size: 1.3em;
+    font-size: 1em;
     font-style: italic;
+}
+
+.post .postShortDescription{
     margin-bottom: 1em;
 }
 
 
-.postBodyShort{
-    margin-bottom: 1.3em;
+.postTagsContainer{
+    border-top: 1px dashed #161616;
+    margin-top: 1em;
+    padding-top: 1em;
 }
-.readMoreButton{
-    text-align: right;
+
+.postTagContainer{
+    padding: 0.3em;
+    display: inline-block;
+
+    border: 2px solid #0597FF;
+    border-radius: 3px;
+}   
+
+.postTagContainer:hover{
+    border-color: blue;
+}
+
+
+.otherPages:after {
+    display: block;
+    content: '';
+    clear: both; 
 }
 
 .linkShowNewer{
@@ -105,26 +123,5 @@ footer{
     float: right;
 }
 
-.otherPages:after {
-    display: block;
-    content: '';
-    clear: both; 
-}
 
 
-.postTagsContainer{
-    border-top: 1px dashed black;
-    padding-top: 1em;
-}
-
-.postTagContainer{
-    padding: 0.3em;
-    
-    border: 2px solid black;
-    border-radius: 15%;
-
-}   
-
-.postTagContainer:hover{
-    border-color: blue;
-}
