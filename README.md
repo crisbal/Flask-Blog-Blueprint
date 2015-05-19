@@ -20,11 +20,6 @@ If you want to add a blog to yout Flask-powered website this is for you.
 * Fully editable templates 
 * Basic but powerfull Admin interface with all the needed functionality for posts (edit,delete,hide/show)
 
-##TODO
-* Comments
-* Finish the API
-* Improve the code
-* Implement a configutation page
 
 ##What do I need to run blog-blueprint?
 * A Flask app
@@ -47,6 +42,22 @@ app.register_blueprint(blog.blog, url_prefix=Config.base_url)
     * I suggest to edit at least secret_key, username and password in "Config.py"
 * Run *setup.py* from the root directory of your app.
 * Restart your app
+
+##TODO
+* Comments
+* Finish the API
+* Improve the code
+* Implement a configutation page
+
+
+##Screenshoots
+**This is just the default template, you can fully customize it by editing *.html* and *.css* files!**
+###Home Page
+![Home Page](http://github.com/crisbal/Flask-Blog-Blueprint/blob/master/screens/home.png)
+###Single Post View
+![Single Post](http://github.com/crisbal/Flask-Blog-Blueprint/blob/master/screens/post.png)
+###Admin Interface
+![Admin Interface](http://github.com/crisbal/Flask-Blog-Blueprint/blob/master/screens/admin.png)
 
 ##License
 MIT License
