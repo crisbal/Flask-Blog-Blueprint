@@ -53,7 +53,7 @@ app.register_blueprint(blog.blog, url_prefix=Config.base_url)
 ##Screenshoots
 **This is just the default template, you can fully customize it by editing *.html* and *.css* files!**
 ###Home Page
-![Home Page](https://github.com/crisbal/Flask-Blog-Blueprint/raw/master/img/master/screens/home.png)
+![Home Page](https://github.com/crisbal/Flask-Blog-Blueprint/raw/master/screens/home.png)
 ###Single Post View
 ![Single Post](https://github.com/crisbal/Flask-Blog-Blueprint/raw/master/screens/post.png)
 ###Admin Interface
