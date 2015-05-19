@@ -6,6 +6,12 @@
     border: 1px solid black;
 }
 
+
+input, textarea{
+    font-size: 1.1em;
+    padding: 0.3em;
+    margin-bottom: 1em;
+}
 .postEditorDesc{
     width: 100%;
 }

@@ -9,6 +9,8 @@
 
 <h1 class="postEditorTitle">{% block editorTitle %}{% endblock %}</h1>
 <span class="postEditorSubtitle">{% block editorSubtitle %}{% endblock %}</span>
+<br>
+<br>
 <div class="postEditor">
     <form id="form" onsubmit="return false;">
         <input type="hidden" name="postId" id="id" value="{% block idValue %}{% endblock %}">
@@ -20,12 +22,14 @@
         <br>
 
         <textarea name="body" id="body" class="postEditorBody" rows="25" placeholder="Body of the post. You can use markdown." required>{% block bodyValue %}{% endblock %}</textarea>
+        <label for="tags">Custom URL: </label><input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url for the post" autocomplete="off" value="{% block urlValue %}{% endblock %}" >
         <br>
 
-        <input type="text" name="customUrl" id="customUrl" class="postEditorCustomUrl" placeholder="Custom Url for the post" autocomplete="off" value="{% block urlValue %}{% endblock %}" >
-        <input type="checkbox" name="hide" id="hide" value="hide" class="postEditorHide" {% block hideValue %}{% endblock %}><label for="hide">Make hidden post</label><br>
-
-        <label for="tags">Tags: </label><input type="text" class="postEditorTags" placeholder="Add tags separated by a ','" name="tags" id="tags" autocomplete="off" value="{% block tagsValue %}{% endblock %}"><br><br>
+        <label for="tags">Tags: </label><input type="text" class="postEditorTags" placeholder="Add tags separated by a ','" name="tags" id="tags" autocomplete="off" value="{% block tagsValue %}{% endblock %}"> <span>Separated by a ','</span>
+        <br>
+        
+        <input type="checkbox" name="hide" id="hide" value="hide" class="postEditorHide" {% block hideValue %}{% endblock %}><label for="hide">Make hidden post</label>
+        <br>
 
         <input type="submit" class="postEditorApply" id="editorApply" value="{% block actionOnPost %}{% endblock %} Post">
     </form>
